@@ -31,6 +31,8 @@ python3 scripts/blog.py new notes python-pathlib --topic programming --title "pa
 (draftタグをfalseにする)
 
 python3 scripts/blog.py check
+
+hugo -D server # localで表示を確認
 ```
 
 ### git pushで投稿
