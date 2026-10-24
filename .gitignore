@@ -13,3 +13,6 @@ Thumbs.db
 # Pythonのチェックツールが生成するキャッシュ
 __pycache__/
 *.py[cod]
+
+# ローカルの実装進捗記録
+/IMPLEMENTATION_PLAN.md

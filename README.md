@@ -5,7 +5,7 @@ Hugo Extended + PaperModで生成し、GitHub ActionsからGitHub Pagesへ公開
 
 - 公開先: https://icchi5160.github.io/slower/
 - リポジトリ: https://github.com/icchi5160/slower
-- 進捗・承認記録: [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
+- 進捗・承認記録はローカルの`IMPLEMENTATION_PLAN.md`で管理し、Gitの対象外とします。
 - Phase 1〜7の実装・公開が完了しています。数式・図・検索・デザイン調整・品質チェックを導入済みです。
 
 ## 普段の記事投稿手順
