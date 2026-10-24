@@ -6,7 +6,48 @@ Hugo Extended + PaperModで生成し、GitHub ActionsからGitHub Pagesへ公開
 - 公開先: https://icchi5160.github.io/slower/
 - リポジトリ: https://github.com/icchi5160/slower
 - 進捗・承認記録: [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
-- 現在の公開サイトはPhase 4時点です。Phase 5〜7の変更はローカルにあり、公開pushは未実施です。
+- Phase 1〜7の実装・公開が完了しています。数式・図・検索・デザイン調整・品質チェックを導入済みです。
+
+## 普段の記事投稿手順
+
+初回準備が済んでいる場合は、次の流れで投稿できます。コマンドはリポジトリのルートで実行します。
+
+1. 下書きを作成する。
+
+   ```bash
+   python3 scripts/blog.py new blog my-new-post --title "記事のタイトル"
+   ```
+
+2. `content/blog/my-new-post/index.md`をVS Codeなどで開き、タイトル・description・本文を編集する。テンプレートの`TODO:`は書き換えるか削除する。
+3. ローカルサーバーを起動し、http://localhost:1313/blog/my-new-post/ を確認する。
+
+   ```bash
+   hugo server -D --disableFastRender
+   ```
+
+4. 公開準備ができたら`draft = false`にし、dateを公開日時に合わせる。未来の日時は通常の公開ビルドには含まれない。必要に応じてlastmodも更新する。
+5. 別のターミナルで公開前チェックを実行する。
+
+   ```bash
+   python3 scripts/blog.py check
+   ```
+
+6. 変更内容を確認し、記事フォルダをコミット・pushする。
+
+   ```bash
+   git status --short
+   git diff
+   git add content/blog/my-new-post/
+   git diff --cached
+   git commit -m "Add new blog post"
+   git push origin main
+   ```
+
+7. GitHub Actionsのbuild・deployが成功したら、[公開サイト](https://icchi5160.github.io/slower/)で記事とSearchへの反映を確認する。
+
+`git add`は次のコミットに入れる変更を選びます。`git diff --cached`は選んだ変更の確認、`git commit`はローカル履歴への保存、`git push`はGitHubへの送信です。表示を終了する場合は`q`を押します。サイトの設定やデザインも変更した場合は、そのファイルも確認してコミットへ含めます。
+
+**ローカルで表示されても、`draft = true`のままでは公開されません。** `-D`はローカルで下書きを表示するためのオプションです。
 
 ## 必要なツールと初回準備
 
@@ -25,7 +66,7 @@ hugo version
 python3 --version
 ```
 
-Hugoがない場合は[公式インストール手順](https://gohugo.io/installation/)に従ってExtended版を導入してください。現在の環境では`~/.local/bin/hugo`を使用しています。見つからない場合は`~/.local/bin`をPATHへ追加します。PythonはOSのパッケージ管理から3.11以上を導入してください。
+Hugoがない場合は[公式インストール手順](https://gohugo.io/installation/)に従ってExtended版を導入してください。`~/.local/bin`へ導入した場合は、そのディレクトリをPATHへ追加します。PythonはOSのパッケージ管理から3.11以上を導入してください。
 
 PaperModは`themes/PaperMod`のsubmoduleです。固定コミットは`969bebdc5600a1639158b5ef4eff9cf6cbb511ac`。テーマ本体を直接編集せず、`layouts/`と`assets/css/extended/`で調整します。Hugo・テーマの更新は別作業として、ビルドとブラウザ確認後にバージョンを揃えて行います。
 
@@ -64,13 +105,13 @@ Notesでは`--topic`が必須です。次の6分野から選びます。カテ�
 | security | Security |
 | infrastructure | Infrastructure |
 
-Hugo標準のコマンドでも作成できます。この場合はタイトルやカテゴリを手動で編集します。
-
-**表示されたパスをctrl+clickすると，そのmdファイルが開かれる**
+Pythonコマンドは内部でHugo標準の`hugo new content`を呼び出し、タイトル・概要・タグやNotesのカテゴリを設定します。Hugoコマンドを直接使う場合は、作成後にこれらを手動で編集します。生成される記事はどちらも同じMarkdown形式で、両方のコマンドを実行する必要はありません。
 
 ```bash
 hugo new content notes/programming/python-pathlib/index.md
 ```
+
+作成された`content/notes/programming/python-pathlib/index.md`を開いて編集します。VS Codeのターミナルでは、表示されたパスをCtrl+クリック（macOSではCmd+クリック）して開けます。
 
 ### メタデータと本文
 
@@ -183,13 +224,17 @@ python3 scripts/blog.py check
 
 生成先は終了時に削除され、起動中のローカル表示や既存の`public/`を置き換えません。リンクチェックは公開URLのサブパスを考慮します。外部リンク・CDNの接続確認、文章の内容の正しさ、完全なMarkdown構文解析、下書きのリンクチェックは対象外です。下書きのリンクは`hugo server -D`で確認してください。
 
-チェック機能の回帰テスト:
+### 補助ツールを修正したときのテスト
+
+普段の執筆では、上の`python3 scripts/blog.py check`だけで十分です。次はチェック機能自体を検証する回帰テストで、リンク切れの検出や記事の上書き防止などを確認します。
 
 ```bash
 python3 -m unittest discover -s tests -v
 ```
 
-生成物を自分で残したい場合や、CIと同じ順に実行する場合:
+### 公開用ファイルを手元に残す場合
+
+次の1行目は公開用ファイルを`public/`へ生成し、2行目はその生成物とMarkdownを検証します。CIもテスト後にこの順で実行します。通常のcheckコマンドと違い、終了後も`public/`が残ります。実行するだけでは公開されません。
 
 ```bash
 hugo --gc --minify --panicOnWarning --printPathWarnings
@@ -209,7 +254,7 @@ python3 scripts/blog.py check --site-dir public
 
 公開先は`icchi5160/slower`です。PagesのSourceは**GitHub Actions**を使用し、独自ドメインは未設定です。mainへのpushを契機にビルド・チェック・デプロイします。PRではビルドとチェックのみ実施します。
 
-この作業セッションでCodexがpush等の外部操作をする場合は、事前のユーザー承認が必要です。以下は、自分で公開する際の手順です。
+記事は`draft = false`にしてからチェック・コミット・pushします。以下は記事フォルダを指定して公開する例です。Codexへ外部操作を依頼する場合は、コミットとpushのどちらを行うか明示してください。
 
 ```bash
 # 対象ファイルを確認してから、明示的に指定してステージする例
@@ -237,7 +282,9 @@ gh run view <run-id> --repo icchi5160/slower --log-failed
 - **Build production site**: TOML・Markdown・テンプレートエラー、警告、テーマ取得を確認する。
 - **Check Markdown and internal links**: 指摘された記事や参照先を修正する。`/notes/...`の直書きより`relref`を使う。
 - **Configure Pages / Deploy to GitHub Pages**: PagesのSource、Actionsの権限、対象ブランチ、環境設定を確認する。
-- 成功しても古い場合: 最新実行のコミットと閲覧URLを確認し、ブラウザを再読み込みする。GitHub Pages側の反映待ちもある。
+- **デプロイ成功なのに記事がない**: 記事が`draft = false`か、dateが未来になっていないかを確認する。`git show HEAD:content/blog/my-new-post/index.md`でコミット内の内容も確認する（パスは実際の記事へ置き換える）。
+- **ローカルだけ新しい**: `git status --short`で未コミット変更を確認する。記事だけをgit addした場合、設定やCSSの変更は含まれない。最新実行のコミットと、反映したい変更が含まれるコミットを比較する。
+- **表示が古い**: 閲覧先がhttps://icchi5160.github.io/slower/ かを確認し、ブラウザを再読み込みする。GitHub Pages側の反映待ちもある。
 
 失敗を修正したらローカルチェックを再実行してpushします。ログへ認証情報を書かず、トークンを設定ファイルへ記入しないでください。
 
@@ -264,7 +311,7 @@ gh run view <run-id> --repo icchi5160/slower --log-failed
 
 Homeの自己紹介は`params.homeInfoParams.Content`、GitHubリンクは`params.socialIcons`、About本文は`content/about.md`で変更します。現在のプロフィールは仮の記述です。
 
-3本の初期サンプルと技術機能の検証記事はサンプルとして公開対象になっています。不要なら`draft = true`にするか削除してください。架空の実験結果・実績を実際の成果として記載しない方針です。
+3本の初期サンプルと技術機能の検証記事、ユーザーが作成した記事を掲載しています。サンプル記事は表示確認用です。不要なら`draft = true`にするか削除してください。架空の実験結果・実績を実際の成果として記載しない方針です。
 
 Weeknotesは未作成です。追加する場合は`content/weeknotes/_index.md`と記事テンプレートを用意し、ナビゲーション・mainSections・作成チェック用のSECTIONSを必要に応じて更新します。
 
