@@ -40,6 +40,9 @@ git diff --cached # 変更の確認
 # コードや設定変更がある場合は、それらも確認して追加する
 git commit -m "Add pathlib learning note"
 git push origin main
+
+# GitHub Actionでビルド・デプロイが成功したか確認
+gh run list --repo icchi5160/slower --limit 5
 ```
 
 ---
