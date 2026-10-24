@@ -2,7 +2,7 @@
 title = "初めての技術記事"
 date = '2026-10-24T16:09:35+09:00'
 lastmod = '2026-10-24T16:09:35+09:00'
-draft = true
+draft = false
 # 数式を使う記事ではtrueに変更する。
 math = false
 # カードにつくタグ
@@ -28,6 +28,7 @@ summary = 'いろいろ記入してみて表示を確認する用のノート'
 python3 scripts/blog.py new notes python-pathlib --topic programming --title "pathlibの使い方" --summary "ファイルパス操作で学んだこと。" --tag Python
 
 (draftのパスが表示されるのでctrl+clickで開いて，内容を書く)
+(draftタグをfalseにする)
 
 python3 scripts/blog.py check
 ```
