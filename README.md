@@ -1,7 +1,7 @@
 # Slower
 
 学習・研究・個人開発の記録を蓄積する、日本語の個人技術ブログです。
-Phase 3まで表示確認済みです。Phase 4の公開用設定はローカルで準備済みで、GitHubでの実行・公開はまだ行っていません。
+GitHub Pagesで公開しています。公開サイト: https://icchi5160.github.io/slower/
 
 ## 必要なツール
 
@@ -59,9 +59,9 @@ hugo --panicOnWarning
 ```
 
 `public/`に生成されます。生成物・キャッシュ・ビルドロックはGit管理から除外しています。
-`baseURL`は公開予定URLの`https://icchi5160.github.io/slower/`です。`hugo server`ではローカル用URLになります。
-Actionsの設定ファイルは作成済みですが、GitHub側の有効化・実行は未実施です。
-Gitの初期化のみ実施し、コミット・リモート登録・push・公開は行っていません。
+`baseURL`は公開URLの`https://icchi5160.github.io/slower/`です。`hugo server`ではローカル用URLになります。
+mainへpushするとGitHub ActionsがビルドしてGitHub Pagesへ自動公開します。
+リモートは`https://github.com/icchi5160/slower.git`です。
 
 ## 主なファイル
 
@@ -254,16 +254,16 @@ Homeの自己紹介・案内・記事一覧間の区切りは`home_info.html`で
 見た目は`spacing.css`で統一しています。タグ・カテゴリ一覧の本文は`layouts/taxonomy.html`で表示します。
 プレビューの表示が更新されない場合は、サーバーを停止して`hugo server -D --disableFastRender`で起動し直してください。
 
-## GitHub PagesとActions（Phase 4：公開操作待ち）
+## GitHub PagesとActions
 
-### 公開先の予定
+### 公開先
 
 - GitHubアカウント：`icchi5160`（ユーザー確認済み）
-- リポジトリ：`icchi5160/slower`（未作成）
-- 公開予定URL：`https://icchi5160.github.io/slower/`（まだ公開済みとは確認していません）
+- リポジトリ：`icchi5160/slower`（Public）
+- 公開URL：https://icchi5160.github.io/slower/
 - デプロイ対象ブランチ：`main`
 
-現在はリポジトリ名`slower`のプロジェクトサイトとして公開する予定です。
+現在はリポジトリ名`slower`のプロジェクトサイトとして公開しています。
 リポジトリ名`icchi5160.github.io`のユーザーサイトなら標準URLは`https://icchi5160.github.io/`になります。
 その場合は`hugo.toml`の`baseURL`とワークフローのPR用`SITE_BASE_URL`の既定値を揃えて変更します。
 mainのデプロイ時は`configure-pages`が返す実際のPages URLを優先します。
@@ -289,7 +289,7 @@ Pagesの自動有効化は無効にしており、公開前にSettings側で有�
 
 ### 認証と初回公開の手順
 
-現時点でローカルのGitリモートは未登録、初回コミットも未作成です。
+初回コミットとoriginの登録、mainへのpush、PagesのActions方式での有効化は実施済みです。
 この環境は、ユーザー自身のログイン後にCLIの認証先が`icchi5160`であることを確認済みです。
 別環境でのログイン時は、ブラウザで`icchi5160`を選んでください。
 認証コードやトークンをチャットやリポジトリに貼り付ける必要はありません。
@@ -345,3 +345,17 @@ workflowは[Hugo公式のPages手順](https://gohugo.io/host-and-deploy/deploy-t
 独自ドメインには後から変更できます。取得したドメインのDNSとGitHub PagesのCustom domainを設定し、
 `hugo.toml`の`baseURL`とworkflowのPRビルド用URLを変更して再デプロイします。
 記事のMarkdownやLeaf Bundleの構成はそのまま利用できます。
+
+### 記事更新の公開
+
+Markdownと必要に応じて`lastmod`を更新し、ローカル表示を確認してからpushします。
+
+```bash
+hugo --gc --minify --panicOnWarning
+git add content/
+git commit -m "Update technical notes"
+git push origin main
+```
+
+[Actionsの実行一覧](https://github.com/icchi5160/slower/actions)でbuild・deployの成功を確認し、
+[公開サイト](https://icchi5160.github.io/slower/)で変更を確認します。

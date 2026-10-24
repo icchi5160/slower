@@ -1,7 +1,7 @@
 +++
 title = '【サンプル】Transformerの基礎'
 date = '2026-10-24T09:00:00+09:00'
-lastmod = '2026-10-24T09:00:00+09:00'
+lastmod = '2026-10-24T13:22:36+09:00'
 draft = false
 tags = ["Transformer", "Deep Learning", "サンプル"]
 categories = ["AI / Deep Learning"]
@@ -27,7 +27,7 @@ Transformerの構成要素を整理するノートの例です。ここでは文
 
 以下は入力から表現更新までを単純化した概念図です。実際の層構造全体を示すものではありません。
 
-![入力、Attention、表現更新の3段階を左から順に示す概念図](attention-overview.svg)
+![入力トークンがAttentionを経て更新後の表現になる流れを示す概念図](attention-overview.svg)
 
 ---
 
