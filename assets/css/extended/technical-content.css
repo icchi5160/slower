@@ -5,11 +5,6 @@
     font-variant-ligatures: none;
 }
 
-/* コードも本文と同じ文字サイズに揃える。 */
-.md-content code {
-    font-size: 1em;
-}
-
 /* 長いコード・数式・図は、そのブロック内だけをスクロールさせる。 */
 .md-content pre {
     max-height: 32rem;

@@ -125,7 +125,7 @@ content/notes/programming/python-pathlib/
 
 ### コード
 
-コードフェンスに言語名（`python` / `c` / `rust` / `bash`など）を付けます。Chromaが色付けし、PaperModのコピーボタンが表示されます。長いコードは枠内でスクロールします。コード文字サイズは本文と同じで、フォントはVS Code標準に沿った等幅フォントの候補から端末にあるものを使用します。
+コードフェンスに言語名（`python` / `c` / `rust` / `bash`など）を付けます。Chromaが色付けし、PaperModのコピーボタンが表示されます。長いコードは枠内でスクロールします。コード文字サイズはPaperMod標準（本文の0.78倍）で、フォントはVS Code標準に沿った等幅フォントの候補から端末にあるものを使用します。
 
 ````markdown
 ```python
