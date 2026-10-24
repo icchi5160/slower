@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="160" viewBox="0 0 720 160" role="img" aria-labelledby="title desc">
+<title id="title">Attentionの概念図</title>
+<desc id="desc">Input、Attention、Updated representationsの3段階を矢印で接続した簡略図。</desc>
+<rect width="720" height="160" rx="12" fill="#f5f5f5"/>
+<g fill="#fff" stroke="#374151" stroke-width="2">
+<rect x="20" y="45" width="160" height="70" rx="8"/>
+<rect x="250" y="45" width="180" height="70" rx="8"/>
+<rect x="500" y="45" width="200" height="70" rx="8"/>
+<path d="M185 80h55m-10-8 10 8-10 8M435 80h55m-10-8 10 8-10 8" fill="none"/>
+</g>
+<g fill="#1f2937" font-family="sans-serif" font-size="18" text-anchor="middle">
+<text x="100" y="86">Input tokens</text>
+<text x="340" y="86">Attention</text>
+<text x="600" y="74">Updated</text><text x="600" y="99">representations</text>
+</g>
+</svg>

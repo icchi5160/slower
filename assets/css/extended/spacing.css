@@ -1,0 +1,200 @@
+/* ブロック間の余白とPCの本文幅を調整する。 */
+:root {
+    --content-gap: 19.2px;
+    --header-height: 44px;
+    --nav-width: var(--main-width);
+}
+
+/* スマートフォンはコンパクトに配置し、PCは下のルールで調整する。 */
+.header-nav {
+    justify-content: flex-start;
+    column-gap: 24px;
+}
+
+.main {
+    padding-block: 19.2px;
+}
+
+/* PaperModの自己紹介欄の最小高さ・中央寄せを解除する。 */
+.home-info {
+    min-height: 0;
+    justify-content: flex-start;
+    margin: 0 0 19.2px;
+}
+
+.home-info .entry-content p {
+    margin-block: 0 9.6px;
+}
+
+.post-entry {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin: 0;
+    padding: 20px;
+}
+
+.page-header,
+.post-header {
+    margin-block: 14.4px 19.2px;
+}
+
+.post-content {
+    margin-block: 24px;
+}
+
+.md-content h1 {
+    margin-block: 33.6px 19.2px;
+}
+
+.md-content h2 {
+    margin-block: 28.8px 14.4px;
+}
+
+.md-content h3,
+.md-content h4,
+.md-content h5,
+.md-content h6 {
+    margin-block: 24px 12px;
+}
+
+@media screen and (max-width: 768px) {
+    .main {
+        padding-block: 14.4px;
+    }
+
+    .post-entry {
+        padding: 14px;
+    }
+}
+
+/* PCの文字サイズに合わせ、コンテンツの最大幅を広げる。 */
+@media screen and (min-width: 769px) {
+    :root {
+        --main-width: 1024px;
+        --header-height: 64px;
+    }
+
+    .header-nav {
+        align-items: center;
+    }
+
+    .header-nav .menu {
+        margin-inline-start: auto;
+        column-gap: 28px;
+    }
+}
+
+/* 一覧はPCで3列、タブレットで2列、スマートフォンで1列。 */
+body.list .main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 19.2px;
+    align-content: start;
+    padding-top: 14.4px;
+}
+
+body.list .main > :not(.post-entry) {
+    grid-column: 1 / -1;
+    min-width: 0;
+}
+
+/* 一覧の冒頭見出しを、本文・カードの左端に揃える。 */
+body.list .main > .page-header {
+    margin-inline: 0;
+    justify-self: stretch;
+    text-align: left;
+}
+
+body.list .home-info {
+    margin: 0 0 9.6px;
+}
+
+.post-entry .entry-content {
+    -webkit-line-clamp: 3;
+}
+
+.post-entry .entry-footer {
+    margin-top: auto;
+    padding-top: 14.4px;
+}
+
+.entry-cover img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.home-links {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14.4px;
+    margin-top: 14.4px;
+}
+
+.home-link {
+    display: flex;
+    flex-direction: column;
+    gap: 7.2px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--entry);
+}
+
+.home-link strong {
+    font-size: 1rem;
+}
+
+.home-link span {
+    color: var(--secondary);
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+.home-link:hover,
+.home-link:focus-visible {
+    border-color: var(--secondary);
+}
+
+@media screen and (min-width: 769px) {
+    body.list .main {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .home-links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .home-link:last-child {
+        grid-column: 1 / -1;
+    }
+}
+
+@media screen and (min-width: 1100px) {
+    body.list .main {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* Markdownの---とHomeの区切り線を共通の見た目にする。 */
+.md-content hr,
+.section-divider {
+    width: 100%;
+    height: 1px;
+    margin: var(--content-gap) 0;
+    border: 0;
+    background: var(--tertiary);
+    flex-shrink: 0;
+}
+
+.md-content hr + h2 {
+    margin-top: 0;
+}
+
+.section-divider + .home-links {
+    margin-top: 0;
+}
+
+.home-info > .section-divider:last-child {
+    margin-bottom: 0;
+}

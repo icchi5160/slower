@@ -1,0 +1,11 @@
+# Hugoの生成物・キャッシュ
+/public/
+/resources/_gen/
+/.hugo_build.lock
+/hugo_stats.json
+
+# エディタ・OSの一時ファイル
+.DS_Store
+Thumbs.db
+*.swp
+*.swo

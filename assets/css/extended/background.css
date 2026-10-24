@@ -1,0 +1,8 @@
+/* 記事・固定ページも、一覧ページと同じ背景色に揃える。 */
+body {
+    background: var(--code-bg);
+}
+
+[data-theme="dark"] body {
+    background: var(--theme);
+}

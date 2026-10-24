@@ -1,0 +1,70 @@
+# icchi5160/slower のGitHub Pagesプロジェクトサイト。
+baseURL = 'https://icchi5160.github.io/slower/'
+locale = 'ja-JP'
+defaultContentLanguage = 'ja'
+hasCJKLanguage = true
+title = 'Slower'
+theme = 'PaperMod'
+timeZone = 'Asia/Tokyo'
+
+# 更新日時は記事のlastmodを手動で更新する。未指定時はdateを使用。
+[frontmatter]
+  lastmod = ['lastmod', 'date']
+
+[params]
+  description = '学習・研究・個人開発の記録'
+  author = 'icchi5160'
+  DateFormat = '2006年1月2日'
+  mainSections = ['notes', 'blog', 'research', 'projects']
+  defaultTheme = 'auto'
+  disableThemeToggle = false
+
+# 仮の自己紹介。確定したプロフィールに合わせて変更する。
+[params.homeInfoParams]
+  Content = '学習・研究・個人開発の記録を、少しずつ。AI・Computer Vision・プログラミングについて書いていきます。（自己紹介は仮の内容です）'
+
+# GitHubリンクの設定箇所。Aboutにも同じ設定を使用する。
+[[params.socialIcons]]
+  name = 'github'
+  url = 'https://github.com/icchi5160'
+  title = 'GitHub — icchi5160'
+
+[taxonomies]
+  tag = 'tags'
+  category = 'categories'
+
+[[menus.main]]
+  identifier = 'home'
+  name = 'Home'
+  pageRef = '/'
+  weight = 10
+
+[[menus.main]]
+  identifier = 'notes'
+  name = 'Notes'
+  pageRef = '/notes'
+  weight = 20
+
+[[menus.main]]
+  identifier = 'blog'
+  name = 'Blog'
+  pageRef = '/blog'
+  weight = 30
+
+[[menus.main]]
+  identifier = 'research'
+  name = 'Research'
+  pageRef = '/research'
+  weight = 40
+
+[[menus.main]]
+  identifier = 'projects'
+  name = 'Projects'
+  pageRef = '/projects'
+  weight = 50
+
+[[menus.main]]
+  identifier = 'about'
+  name = 'About'
+  pageRef = '/about'
+  weight = 60

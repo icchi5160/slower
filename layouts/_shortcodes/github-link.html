@@ -1,0 +1,5 @@
+{{- range site.Params.socialIcons -}}
+  {{- if eq .name "github" -}}
+<p><a href="{{ .url }}">{{ .title }}</a></p>
+  {{- end -}}
+{{- end -}}

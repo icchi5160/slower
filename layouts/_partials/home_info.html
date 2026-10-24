@@ -1,0 +1,28 @@
+{{- with site.Params.homeInfoParams }}
+<article class="first-entry home-info">
+    {{- with .Title }}
+    <header class="entry-header">
+        <h1>{{ . | markdownify }}</h1>
+    </header>
+    {{- end }}
+    <div class="entry-content md-content">
+        {{ $opts := dict "display" "block" }}
+        {{ .Content | $.Page.RenderString $opts }}
+    </div>
+    <footer class="entry-footer">
+        {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
+    </footer>
+    <hr class="section-divider">
+    <nav class="home-links" aria-label="コンテンツの案内">
+        {{- range slice "/notes" "/research" "/projects" }}
+        {{- with site.GetPage . }}
+        <a class="home-link" href="{{ .RelPermalink }}">
+            <strong>{{ .Title }}</strong>
+            <span>{{ .Description }}</span>
+        </a>
+        {{- end }}
+        {{- end }}
+    </nav>
+    <hr class="section-divider">
+</article>
+{{- end -}}
