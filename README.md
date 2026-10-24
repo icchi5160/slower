@@ -20,11 +20,11 @@ Git未導入の場合も[公式手順](https://git-scm.com/downloads)を参照�
 
 ## 初回取得
 
-リポジトリのURLが確定したら、submoduleを含めてcloneします。
+submoduleを含めてcloneします。
 
 ```bash
-git clone --recurse-submodules <リポジトリURL>
-cd <取得したディレクトリ>
+git clone --recurse-submodules https://github.com/icchi5160/slower.git
+cd slower
 ```
 
 通常のclone済み環境では、次のコマンドでテーマを取得できます。
