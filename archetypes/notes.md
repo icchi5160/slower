@@ -7,21 +7,24 @@ title = '{{ replace $name "-" " " | title }}'
 date = '{{ .Date }}'
 lastmod = '{{ .Date }}'
 draft = true
+# 数式を使う記事ではtrueに変更する。
+math = false
 tags = []
 categories = []
-description = '記事の概要を1〜2文で記入してください。'
-summary = '一覧に表示する要約を記入してください。'
+# 公開前にdescriptionを記入する。summaryは空なら本文から自動生成。
+description = ''
+summary = ''
 +++
 
 ## 学習の目的
 
-何を理解したいかを記入します。
+TODO: 何を理解したいかを記入します。
 
 ---
 
 ## 要点
 
-学んだ内容を整理します。
+TODO: 学んだ内容を整理します。
 
 ---
 

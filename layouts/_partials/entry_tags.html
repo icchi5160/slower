@@ -1,0 +1,10 @@
+{{- with .GetTerms "tags" }}
+<ul class="entry-tags" aria-label="記事のタグ">
+    {{- range first 3 . }}
+    <li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+    {{- end }}
+    {{- if gt (len .) 3 }}
+    <li class="more-tags" aria-label="ほか{{ sub (len .) 3 }}個のタグ">+{{ sub (len .) 3 }}</li>
+    {{- end }}
+</ul>
+{{- end }}

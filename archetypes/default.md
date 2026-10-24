@@ -7,12 +7,15 @@ title = '{{ replace $name "-" " " | title }}'
 date = '{{ .Date }}'
 lastmod = '{{ .Date }}'
 draft = true
+# 数式を使う記事ではtrueに変更する。
+math = false
 tags = []
 categories = []
-description = '記事の概要を1〜2文で記入してください。'
-summary = '一覧に表示する要約を記入してください。'
+# 公開前にdescriptionを記入する。summaryは空なら本文から自動生成。
+description = ''
+summary = ''
 +++
 
 ## 概要
 
-ここに本文を記入します。
+TODO: ここに本文を記入します。

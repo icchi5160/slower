@@ -54,6 +54,9 @@ jobs:
           tar -xzf "${RUNNER_TEMP}/${archive}" -C "${RUNNER_TEMP}/hugo" hugo
           echo "${RUNNER_TEMP}/hugo" >> "${GITHUB_PATH}"
 
+      - name: Test authoring tools
+        run: python3 -m unittest discover -s tests -v
+
       - name: Build production site
         env:
           HUGO_ENVIRONMENT: production
@@ -61,7 +64,12 @@ jobs:
           SITE_BASE_URL: ${{ steps.pages.outputs.base_url || 'https://icchi5160.github.io/slower' }}
         run: |
           hugo version
-          hugo --gc --minify --panicOnWarning --baseURL "${SITE_BASE_URL%/}/"
+          hugo --gc --minify --panicOnWarning --printPathWarnings --baseURL "${SITE_BASE_URL%/}/"
+
+      - name: Check Markdown and internal links
+        env:
+          SITE_BASE_URL: ${{ steps.pages.outputs.base_url || 'https://icchi5160.github.io/slower' }}
+        run: python3 scripts/blog.py check --site-dir public --base-url "${SITE_BASE_URL%/}/"
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'

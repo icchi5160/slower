@@ -2,6 +2,7 @@
 title = 'About'
 description = 'このブログと書き手について。'
 hideMeta = true
+ShowToc = false
 +++
 
 ## プロフィール

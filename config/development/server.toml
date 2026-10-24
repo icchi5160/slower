@@ -1,0 +1,11 @@
+# 以前案内したローカルの/slower/...も、新しいURLへ転送する。
+[[redirects]]
+  fromRe = '^/slower(?:/(.*))?$'
+  to = '/$1'
+  status = 302
+  force = true
+
+[[redirects]]
+  from = '/**'
+  to = '/404.html'
+  status = 404

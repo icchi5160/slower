@@ -7,15 +7,18 @@ title = '{{ replace $name "-" " " | title }}'
 date = '{{ .Date }}'
 lastmod = '{{ .Date }}'
 draft = true
+# 数式を使う記事ではtrueに変更する。
+math = false
 tags = []
 categories = []
-description = '記事の概要を1〜2文で記入してください。'
-summary = '一覧に表示する要約を記入してください。'
+# 公開前にdescriptionを記入する。summaryは空なら本文から自動生成。
+description = ''
+summary = ''
 +++
 
 ## 概要
 
-解決したい課題と対象ユーザーを記入します。
+TODO: 解決したい課題と対象ユーザーを記入します。
 
 ---
 
@@ -29,10 +32,10 @@ summary = '一覧に表示する要約を記入してください。'
 
 ## 現在の状態
 
-構想・開発中・公開済みなど、実際の状態を記入します。
+TODO: 構想・開発中・公開済みなど、実際の状態を記入します。
 
 ---
 
 ## GitHubリポジトリ
 
-公開済みの実際のURLを記入します。
+TODO: 公開済みの実際のURLを記入します。

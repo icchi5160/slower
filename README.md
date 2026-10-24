@@ -1,361 +1,271 @@
 # Slower
 
-学習・研究・個人開発の記録を蓄積する、日本語の個人技術ブログです。
-GitHub Pagesで公開しています。公開サイト: https://icchi5160.github.io/slower/
+学習・研究・個人開発を日本語Markdownで記録する個人技術ブログです。
+Hugo Extended + PaperModで生成し、GitHub ActionsからGitHub Pagesへ公開します。
 
-## 必要なツール
+- 公開先: https://icchi5160.github.io/slower/
+- リポジトリ: https://github.com/icchi5160/slower
+- 進捗・承認記録: [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
+- 現在の公開サイトはPhase 4時点です。Phase 5〜7の変更はローカルにあり、公開pushは未実施です。
 
-- Git（確認環境: 2.43.0）
-- Hugo **Extended v0.168.0**（公式の最新安定版を2026-10-24に確認）
-- Go / Node.js / npmは現在の構成では不要です。
+## 必要なツールと初回準備
 
-この環境では公式Linux amd64アーカイブのSHA-256を公式チェックサムと照合し、
-`~/.local/bin/hugo`へ導入しました。`hugo version`に`+extended`が含まれることを確認してください。
-コマンドが見つからない場合は`export PATH="$HOME/.local/bin:$PATH"`を実行してください。
-
-別の環境では[公式インストール手順](https://gohugo.io/installation/)に従い、
-[公式リリースv0.168.0](https://github.com/gohugoio/hugo/releases/tag/v0.168.0)からOS/CPUに合ったExtended版を導入してください。
-アーカイブを公式チェックサムで検証してから、PATHの通ったディレクトリに配置します。
-Git未導入の場合も[公式手順](https://git-scm.com/downloads)を参照してください。
-
-## 初回取得
-
-submoduleを含めてcloneします。
+- Git（submodule対応）
+- Hugo **Extended 0.168.0**（CIと同じバージョンを推奨）
+- Python **3.11以上**（執筆・品質チェック用。追加パッケージ不要）
+- ブラウザ。数式・Mermaidの表示にはCDNへの接続が必要です。
+- GitHub CLI `gh`は公開結果をCLIで見る場合に任意で使用します。
 
 ```bash
 git clone --recurse-submodules https://github.com/icchi5160/slower.git
 cd slower
-```
-
-通常のclone済み環境では、次のコマンドでテーマを取得できます。
-
-```bash
 git submodule update --init --recursive
+git --version
+hugo version
+python3 --version
 ```
 
-PaperModは`themes/PaperMod`のGit submoduleでコミットを固定しています。
-初期導入コミット: `969bebdc5600a1639158b5ef4eff9cf6cbb511ac`（必要Hugoバージョン: 0.158.0以上）。
-テーマ本体は直接編集せず、将来の調整はプロジェクト側の`layouts/`や`assets/`で行います。
-更新時は別途互換性を確認し、submoduleの更新を親リポジトリにも記録してください。
+Hugoがない場合は[公式インストール手順](https://gohugo.io/installation/)に従ってExtended版を導入してください。現在の環境では`~/.local/bin/hugo`を使用しています。見つからない場合は`~/.local/bin`をPATHへ追加します。PythonはOSのパッケージ管理から3.11以上を導入してください。
+
+PaperModは`themes/PaperMod`のsubmoduleです。固定コミットは`969bebdc5600a1639158b5ef4eff9cf6cbb511ac`。テーマ本体を直接編集せず、`layouts/`と`assets/css/extended/`で調整します。Hugo・テーマの更新は別作業として、ビルドとブラウザ確認後にバージョンを揃えて行います。
 
 ## ローカル起動
 
 ```bash
-cd /home/icchi/slower
-hugo server -D
+hugo server -D --disableFastRender
 ```
 
-ブラウザで <http://localhost:1313/> を開きます。停止は`Ctrl+C`です。
-ヘッダーの「Slower」、PaperModのレイアウト、ライト／ダーク切替ボタンを確認できます。
-Homeには仮の自己紹介、GitHubリンク、最新記事の一覧を表示します。Notes・Research・Projectsにはサンプル記事があります。Blogはまだ記事がありません。
-`-D`は下書きも表示する指定で、通常のビルドには下書きは含まれません。
-サーバーは標準でローカルホストにのみ公開されます。別PCから開発環境を使う場合は、
-エディタ等で1313番ポートを転送してください。
+http://localhost:1313/ を開きます。終了は`Ctrl+C`。`-D`は下書きも表示します。通常の`hugo server`は下書きを除外します。下書きはローカル表示用であり、GitHubへpushしたMarkdown自体はPublicリポジトリから閲覧できます。
 
-## ビルド
+ローカルURLは`config/development/hugo.toml`、公開URLはルートの`hugo.toml`で管理します。ローカルは`/slower/`を付けずにアクセスしてください。ポートが使用中なら、起動済みサーバーを使うか`hugo server -D --port 1314`で別ポートにします。
+
+## 新しい記事を作る
+
+記事は原則Leaf Bundle（記事ごとのフォルダと`index.md`）で管理します。
+slugは英小文字・数字をハイフンで区切ります。公開後のslug変更はURL変更になるため避けます。
 
 ```bash
-hugo --panicOnWarning
+python3 scripts/blog.py new notes python-pathlib --topic programming --title "pathlibの使い方" --summary "ファイルパス操作で学んだこと。" --tag Python
+python3 scripts/blog.py new blog my-first-post --title "初めての記事"
+python3 scripts/blog.py new research model-comparison --title "モデルの比較記録"
+python3 scripts/blog.py new projects my-cli --title "CLIツールの開発記録" --tag Rust
 ```
 
-`public/`に生成されます。生成物・キャッシュ・ビルドロックはGit管理から除外しています。
-`baseURL`は公開URLの`https://icchi5160.github.io/slower/`です。`hugo server`ではローカル用URLになります。
-mainへpushするとGitHub ActionsがビルドしてGitHub Pagesへ自動公開します。
-リモートは`https://github.com/icchi5160/slower.git`です。
+`--tag`は繰り返し指定できます。`--summary`はdescriptionとsummaryの両方へ設定します。同じURLの記事がある場合は上書きしません。
 
-## 主なファイル
+Notesでは`--topic`が必須です。次の6分野から選びます。カテゴリも自動設定します。
 
-- `hugo.toml`: サイト名、日本語、タイムゾーン、テーマの基本設定
-- `themes/PaperMod/`: テーマのsubmodule
-- `archetypes/`: 共通・セクション別の記事テンプレート
-- `IMPLEMENTATION_PLAN.md`: Phaseごとの進捗と承認状況
+| topic | 分野 |
+| --- | --- |
+| deep-learning | AI / Deep Learning |
+| computer-vision | Computer Vision |
+| programming | Programming |
+| mathematics | Mathematics |
+| security | Security |
+| infrastructure | Infrastructure |
 
-日本語設定は[現在のHugo設定仕様](https://gohugo.io/configuration/all/#locale)に合わせて
-`locale`を使用し、非推奨の`languageCode`は使用していません。
-テーマ導入方法は[PaperMod公式手順](https://github.com/adityatelange/hugo-PaperMod/wiki/Installation)を参照しています。
+Hugo標準のコマンドでも作成できます。この場合はタイトルやカテゴリを手動で編集します。
 
-各Phase完了後はユーザー確認を待ち、明示的な承認後に次の1 Phaseだけ進めます。
-
-## 基本ページとプロフィールの変更（Phase 2）
-
-| ページ | URL | 編集するファイル |
-| --- | --- | --- |
-| Home | `/` | `hugo.toml`の`params.homeInfoParams`（自己紹介） |
-| Notes | `/notes/` | `content/notes/_index.md` |
-| Blog | `/blog/` | `content/blog/_index.md` |
-| Research | `/research/` | `content/research/_index.md` |
-| Projects | `/projects/` | `content/projects/_index.md` |
-| About | `/about/` | `content/about.md` |
-| タグ | `/tags/` | `content/tags/_index.md` |
-| カテゴリ | `/categories/` | `content/categories/_index.md` |
-
-ナビゲーションの名称と順番は`hugo.toml`の`menus.main`で変更します。
-狭い画面ではPaperMod標準の横スクロールでメニューの末尾まで移動できます。
-
-GitHubユーザー名はユーザー確認済みの`icchi5160`です。
-リンクは`hugo.toml`の`params.socialIcons`にまとめ、HomeとAboutで共用しています。
-Aboutのリンクは`layouts/_shortcodes/github-link.html`から参照します。
-`params.author`は現在GitHubユーザー名を使用しています。必要なら希望の表示名に変更してください。
-
-Homeの自己紹介とAboutのプロフィール・興味分野・使用技術は仮の内容と明記しています。
-公開前に実際の内容へ更新してください。Aboutは記事の一覧には含めていません。
-記事一覧はPaperMod標準レイアウトを使用し、Homeの一覧対象は
-`params.mainSections`（notes / blog / research / projects）に設定しています。
-
-タグとカテゴリはHugoのtaxonomy機能を使用します。Notesのリンクから一覧へ、
-記事末尾のタグから同じタグの記事一覧へ移動できます。
-Weeknotesは未作成です。後から他のセクションと同様に追加できます。
-
-基本ページは[Hugoのセクション構成](https://gohugo.io/content-management/sections/)と
-[PaperModのHome Infoモード](https://github.com/adityatelange/hugo-PaperMod/wiki/Features#home-info-mode)に沿って実装しています。
-
-全ページの背景色は`assets/css/extended/background.css`で統一しています。
-ライトモードは薄いグレー、ダークモードはテーマ標準の背景色です。
-
-## Markdown記事の作成（Phase 3）
-
-記事は`index.md`と画像を同じディレクトリにまとめるLeaf Bundleを基本とします。
-英小文字とハイフンで記事ディレクトリ名を付けます。`index.md`は記事、`_index.md`は一覧ページです。
-
-```text
-content/
-├── notes/
-│   ├── _index.md
-│   ├── deep-learning/transformer-basics/
-│   │   ├── index.md
-│   │   └── attention-overview.svg
-│   ├── computer-vision/
-│   ├── programming/
-│   ├── mathematics/
-│   ├── security/
-│   └── infrastructure/
-├── blog/
-├── research/image-classification-experiment/index.md
-└── projects/cli-tool-development/index.md
-```
-
-Notesの分野ディレクトリには`_index.md`を置いていないため、Notes一覧に配下の記事が並びます。
-分野別の絞り込みにはカテゴリを使用します。空ディレクトリの`.gitkeep`はGit管理用で、記事にはなりません。
-
-### 新規記事の作成
-
-プロジェクトルートで実行します。各セクションのテンプレートは自動選択されます。
+**表示されたパスをctrl+clickすると，そのmdファイルが開かれる**
 
 ```bash
-hugo new content notes/programming/my-first-note/index.md
-hugo new content blog/my-first-post/index.md
-hugo new content research/my-first-experiment/index.md
-hugo new content projects/my-first-project/index.md
+hugo new content notes/programming/python-pathlib/index.md
 ```
 
-作成されたファイルをエディタで開き、タイトル・概要・本文・タグを記入します。
-`archetypes/notes.md`などに、学習の目的・実験設定・プロジェクト概要といった見出しを用意しています。
-これら以外の種類では`archetypes/default.md`を使用します。
-
-### メタデータ
-
-先頭の`+++`で囲まれた部分はTOML形式です。
+### メタデータと本文
 
 ```toml
-title = '記事のタイトル'
++++
+title = 'pathlibの使い方'
 date = '2026-10-24T09:00:00+09:00'
 lastmod = '2026-10-24T09:00:00+09:00'
 draft = true
-tags = ['Python', '学習記録']
+math = false
+tags = ['Python']
 categories = ['Programming']
-description = '記事の説明文です。'
-summary = '記事一覧に表示する要約です。'
+description = 'ファイルパス操作で学んだこと。'
+summary = ''
++++
 ```
 
-- `date`: 公開日。初期値は作成日時なので、公開時に必要に応じて変更します。
-- `lastmod`: 最終更新日。本文を更新したときに手動で変更します。未指定なら`date`を使用します。
-- `draft`: 初期値は`true`。`hugo server -D`で確認し、公開可能になったら`false`にします。
-- `tags`: 複数付与できる技術用語やテーマ。空配列も使用できます。
-- `categories`: 大分類。NotesはAI / Deep Learning、Computer Vision、Programming、Mathematics、Security、Infrastructureを基本とします。
-- `description`: 詳細ページのタイトル下などに表示する説明。
-- `summary`: 一覧に表示する要約。未指定時はHugoが本文から生成します。
+- `title`: 記事タイトル。
+- `date`: 公開日時。公開時に実際の日時へ直します。未来の日付は通常ビルドに出ません。
+- `lastmod`: 内容を更新した日時を手動で設定します。省略時はdateを使用し、公開日より新しい場合は記事末尾に表示します。
+- `draft`: 執筆中はtrue、公開準備ができたらfalse。
+- `description`: 公開記事では必須の短い説明。
+- `summary`: 一覧の要約。空なら本文から自動生成。
+- `tags` / `categories`: 文字列の配列。使わなければ`[]`。
+- `math`: 数式を使う記事のみtrue。
 
-公開日は記事上部に表示します。`lastmod`が`date`より新しい場合は本文末尾に更新日を表示します。
-Gitのコミット日時やファイルの更新時刻には依存しません。
-内容を更新しても記事ディレクトリ名と`date`は維持し、`lastmod`を変更する運用を基本とします。
+テンプレートの`TODO:`を自分の本文に置き換え、不要な見出しは削除します。見出しは記事タイトルと重複するh1を避け、`##`から始めます。大きなブロックの区切りには空行を挟んで`---`を置きます。コード以外のHTMLは原則使わず、標準Markdownで書きます。
 
-### 画像の追加
+## 記事の更新と画像
 
-記事の`index.md`と同じディレクトリに画像を置き、相対パスで参照します。
+既存の`index.md`を編集し、実質的な内容変更ではlastmodを更新します。画像は記事フォルダに同梱し、英小文字とハイフンで命名します。
+
+```text
+content/notes/programming/python-pathlib/
+├── index.md
+└── path-example.webp
+```
 
 ```markdown
-![画像の内容を説明する代替テキスト](example.png)
+![パス操作の入力と出力を示す図](path-example.webp)
 ```
 
-サブディレクトリに置く場合は`images/example.png`のように指定します。
-記事を移動するときは画像も含めてディレクトリごと移動してください。
-Transformerのサンプルには、このリポジトリで作成したSVGの概念図を同梱しています。
+記事中の画像には内容が分かる代替テキストを付けます。スクリーンショットは不要部分を切り、読める範囲で縮小・圧縮します。外部画像への直リンクより、公開権限を確認した画像の同梱を推奨します。個人情報・研究データ・認証情報の写り込みも確認してください。
 
-### サンプル記事の確認・削除
-
-- Notes: `/notes/deep-learning/transformer-basics/`
-- Research: `/research/image-classification-experiment/`
-- Projects: `/projects/cli-tool-development/`
-
-サンプルはタイトル・要約・本文でサンプルと明記し、表示確認のため`draft = false`にしています。
-Researchの実験は未実施、Projectsは未実装の構想例です。架空の測定値や公開実績はありません。
-サンプルを公開対象から外すには`draft = true`に変更するか、該当する記事ディレクトリを削除してください。
-`hugo server -D`では下書きも表示されるため、公開対象のみの確認には`hugo server`を使用します。
-
-作成と構成は[Hugo公式Archetypes](https://gohugo.io/content-management/archetypes/)と
-[Page bundles](https://gohugo.io/content-management/page-bundles/)に準拠しています。
-更新日の優先順位は[公式front matter設定](https://gohugo.io/configuration/front-matter/)に従い明示しています。
-
-### 文字サイズの調整
-
-`assets/css/extended/typography.css`でPaperModの文字サイズを上書きしています。
-標準のブラウザ設定では、PC（画面幅769px以上）は本文約20.8px、記事・ページタイトル約36.4px、本文の第2見出し約28.6pxです。
-画面幅768px以下では本文16px、タイトル24px、第2見出し20pxです。
-PCのみルートの文字サイズを130%にし、カードの要約や日付なども同じ倍率で表示します。
-サイズにはremを使用し、ブラウザの既定フォントサイズの変更に追従します。
-
-ブロック間の余白は`assets/css/extended/spacing.css`で調整しています。
-Homeの自己紹介欄はテーマ標準の最小高さを解除し、内容に応じた高さにしています。
-ヘッダーと本文の間、自己紹介とカードの間、カード同士、記事内の見出し・段落の余白を抑えています。
-PC（画面幅769px以上）のコンテンツ最大幅は`--main-width: 1024px`です。
-`spacing.css`で調整できます。スマートフォンの幅はテーマ標準を維持しています。
-
-### 参考サイトに合わせた一覧レイアウト
-
-Homeは自己紹介・GitHubリンク、Notes / Research / Projectsへの案内カード、記事一覧の順に表示します。
-案内カードは`layouts/_partials/home_info.html`で既存ページのタイトル・説明文を参照します。
-記事一覧は1100px以上で3列、769〜1099pxで2列、768px以下で1列です。
-`assets/css/extended/spacing.css`で配置・カード間隔を調整しています。
-ヘッダーと本文の最大幅を揃え、記事カードは行ごとに高さを揃えて日付を下端に配置します。
-記事にカバー画像が指定された場合は16:9で表示します。現在のサンプルは画像なしのカードです。
-参考サイトのコンテンツ・画像・CSSの流用はしていません。
-PCヘッダーは高さ64pxで上下に余裕を持たせ、ナビゲーションを右寄せにしています。
-メニュー項目の間隔は28pxです。スマートフォンでは高さ44pxのコンパクトな配置を維持しています。
-
-ブロック間の余白は、コンパクト化した値から1.2倍に調整しています。記事グリッドの間隔は19.2px、案内カード間は14.4pxです。
-
-### ブロック間の区切り線
-
-内容の大きな区切りには、前後に空行を入れて`---`を記述します。
+別の記事へのリンクはHugoの`relref`を使うと、GitHub Pagesの`/slower/`を含むURLにも対応できます。
 
 ```markdown
-前のブロックの本文。
-
----
-
-## 次の見出し
-
-次のブロックの本文。
+[Transformerの基礎]({{< relref "/notes/deep-learning/transformer-basics" >}})
 ```
 
-記事・Aboutでは主な節の間、各セクショントップでは見出しと紹介本文の間に使用しています。
-新規記事テンプレートにも区切り線を用意しています。段落ごとに追加する必要はありません。
-Homeの自己紹介・案内・記事一覧間の区切りは`home_info.html`で出力します。
-見た目は`spacing.css`で統一しています。タグ・カテゴリ一覧の本文は`layouts/taxonomy.html`で表示します。
-プレビューの表示が更新されない場合は、サーバーを停止して`hugo server -D --disableFastRender`で起動し直してください。
+## コード・数式・図・目次・検索
 
-## GitHub PagesとActions
+### コード
 
-### 公開先
+コードフェンスに言語名（`python` / `c` / `rust` / `bash`など）を付けます。Chromaが色付けし、PaperModのコピーボタンが表示されます。長いコードは枠内でスクロールします。コード文字サイズは本文と同じで、フォントはVS Code標準に沿った等幅フォントの候補から端末にあるものを使用します。
 
-- GitHubアカウント：`icchi5160`（ユーザー確認済み）
-- リポジトリ：`icchi5160/slower`（Public）
-- 公開URL：https://icchi5160.github.io/slower/
-- デプロイ対象ブランチ：`main`
+````markdown
+```python
+from pathlib import Path
+print(Path.cwd())
+```
+````
 
-現在はリポジトリ名`slower`のプロジェクトサイトとして公開しています。
-リポジトリ名`icchi5160.github.io`のユーザーサイトなら標準URLは`https://icchi5160.github.io/`になります。
-その場合は`hugo.toml`の`baseURL`とワークフローのPR用`SITE_BASE_URL`の既定値を揃えて変更します。
-mainのデプロイ時は`configure-pages`が返す実際のPages URLを優先します。
+### KaTeX
 
-### ワークフロー
+front matterに`math = true`を指定します。インラインは`$...$`または`\(...\)`、独立行は`$$...$$`または`\[...\]`で囲みます。
 
-`.github/workflows/hugo.yaml`は次の処理を行います。
+```markdown
+損失を $L$ とします。
 
-1. ソースとPaperMod submoduleを取得。
-2. mainの公開時のみ、既に有効になっているPagesのURLを取得。
-3. Hugo Extended v0.168.0をダウンロードし、固定したSHA-256で照合。
-4. 本番用ビルドを実行。警告も失敗として扱います。
-5. mainでは生成物をアップロードし、GitHub Pagesへデプロイ。
-
-`main`へのpushと手動実行に対応し、main向けPRではビルド確認だけ行います。
-下書き・将来日付の記事は通常のHugoの公開条件に従って除外します。
-`public/`はGitにコミットしません。テーマのバージョンは親リポジトリのsubmoduleで固定します。
-
-Actionsは公式のcheckout / configure-pages / upload-pages-artifact / deploy-pagesを使用し、コミットSHAで固定しています。
-権限はビルドに`contents: read`と`pages: read`、デプロイに`pages: write`と`id-token: write`を付与しています。
-個別のPATやAPIキーをワークフローへ登録する必要はありません。
-Pagesの自動有効化は無効にしており、公開前にSettings側で有効化します。
-
-### 認証と初回公開の手順
-
-初回コミットとoriginの登録、mainへのpush、PagesのActions方式での有効化は実施済みです。
-この環境は、ユーザー自身のログイン後にCLIの認証先が`icchi5160`であることを確認済みです。
-別環境でのログイン時は、ブラウザで`icchi5160`を選んでください。
-認証コードやトークンをチャットやリポジトリに貼り付ける必要はありません。
-
-```bash
-gh auth login --hostname github.com
-gh api user --jq .login
+$$
+L = -\sum_i y_i \log p_i
+$$
 ```
 
-複数アカウントを登録済みなら`gh auth switch --hostname github.com --user icchi5160`で選択できます。
-最後のコマンドが`icchi5160`を返すことと、対象リポジトリへのアクセス権を確認します。
-Gitのコミット作者名・メールはGitHubログインとは別の設定なので、初回コミット前に確認してください。
+KaTeX 0.19.1をjsDelivrから整合性ハッシュ付きで読み込みます。math指定のないページでは読み込みません。金額の`$`は必要に応じて`\$`と書きます。
 
-以下のリポジトリ作成・push・Pages有効化は、ユーザーの外部操作承認後に行います。
+### Mermaid
 
-1. 既存リポジトリの有無を確認し、存在する場合は内容を確認します。404は未作成のほか、アクセス権がない場合もあります。
-2. 未作成なら`icchi5160/slower`をPublicで作成します。既存リポジトリの公開設定は勝手に変更しません。
-3. ローカルの公開対象を確認し、ソースとテーマsubmoduleを初回コミットに含め、対象リポジトリへpushします。
-4. GitHubのリポジトリで **Settings → Pages → Build and deployment → Source → GitHub Actions** を選択します。
-5. **Actions → Build and deploy Hugo → Run workflow** からmainを選択して実行します。
-6. buildとdeployが成功し、デプロイ先URLでHome・各ページ・記事・画像を確認します。
-7. 記事更新をmainへpushし、再度デプロイされて変更が反映されることを確認します。
+言語名`mermaid`のコードブロックで記述します。図があるページだけMermaid 12.2.0をjsDelivrから読み込みます。ダークモード切替時も再描画します。
 
-初回pushがPages有効化より先だった場合、`Configure Pages`が失敗することがあります。
-SourceをGitHub Actionsに設定した後、手動実行またはRe-run jobsで再実行してください。
-無料運用はPublicリポジトリを前提とします。現在のサンプル3記事は`draft = false`なので、公開時にも含まれます。
+````markdown
+```mermaid
+flowchart LR
+  Input[入力画像] --> Model[モデル] --> Output[分類結果]
+```
+````
 
-### 本番ビルドのローカル確認
+### 目次と検索
+
+目次は`##`と`###`から自動生成します。不要なページではfront matterに`ShowToc = false`を指定します。
+
+SearchはPaperMod同梱のFuse.jsを使用し、タイトル・要約・本文を検索します。日本語の部分文字列と英語の技術用語に対応します。日本語の形態素解析は行いません。検索対象から外すページは`searchHidden = true`を指定します。公開ビルドの検索インデックスには下書きを含めません。
+
+全機能の表示例: http://localhost:1313/blog/technical-writing-check/
+
+## 公開前の品質チェック
 
 ```bash
-hugo --gc --minify --panicOnWarning --environment production
-hugo server --disableFastRender
+python3 scripts/blog.py check
 ```
 
-生成物を一時ディレクトリへ分ける場合は`--destination /tmp/slower-production-preview`を指定できます。
-`hugo server -D`は下書きも表示するため、公開対象だけ確認するときは`-D`を外します。
+追加パッケージなしで次を確認し、失敗時は終了コード1と対象ファイル・行番号を表示します。
 
-### デプロイエラーの確認
+- MarkdownのTOML front matter、タイトル、日時、タグ等の型。
+- 公開記事の説明と本文、lastmodとdateの順序、未記入の`TODO:`。
+- 記事パスの命名、閉じ忘れたコードフェンス、空の見出し、画像の空の代替テキスト。
+- 一時フォルダへの本番ビルド（下書き除外、警告・URL衝突で失敗）。
+- 生成HTMLの内部リンク、画像・スクリプト等の参照、srcset、見出しアンカー。
 
-GitHubの **Actions → Build and deploy Hugo → 対象の実行 → 失敗したjob / step** でログを開きます。
+生成先は終了時に削除され、起動中のローカル表示や既存の`public/`を置き換えません。リンクチェックは公開URLのサブパスを考慮します。外部リンク・CDNの接続確認、文章の内容の正しさ、完全なMarkdown構文解析、下書きのリンクチェックは対象外です。下書きのリンクは`hugo server -D`で確認してください。
 
-- Checkout：submodule取得が成功したか、`.gitmodules`とテーマのコミットがpushに含まれているか確認。
-- Configure Pages：Settings → PagesのSourceがGitHub Actionsか、公開先リポジトリと権限が正しいか確認。
-- Install Hugo Extended：ダウンロードエラーかチェックサム不一致かを確認。バージョン更新時は公式チェックサムと固定値も同時に更新。
-- Build production site：ログのファイル名・行番号からMarkdown、TOML、テンプレートを修正し、同じ本番ビルドコマンドで確認。
-- Deploy：github-pages environmentの承認待ち・対象ブランチの制限・Pages/OIDC権限を確認。
-- 公開ページの表示：ActionsのデプロイURL、`baseURL`、ブラウザのキャッシュを確認。
-
-workflowは[Hugo公式のPages手順](https://gohugo.io/host-and-deploy/deploy-to-github-pages/)と
-[GitHub公式のPages作成手順](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)を参考に、
-現在使用しないGo・Node.js・Dart Sassの導入を省いて構成しています。
-
-独自ドメインには後から変更できます。取得したドメインのDNSとGitHub PagesのCustom domainを設定し、
-`hugo.toml`の`baseURL`とworkflowのPRビルド用URLを変更して再デプロイします。
-記事のMarkdownやLeaf Bundleの構成はそのまま利用できます。
-
-### 記事更新の公開
-
-Markdownと必要に応じて`lastmod`を更新し、ローカル表示を確認してからpushします。
+チェック機能の回帰テスト:
 
 ```bash
-hugo --gc --minify --panicOnWarning
-git add content/
-git commit -m "Update technical notes"
+python3 -m unittest discover -s tests -v
+```
+
+生成物を自分で残したい場合や、CIと同じ順に実行する場合:
+
+```bash
+hugo --gc --minify --panicOnWarning --printPathWarnings
+python3 scripts/blog.py check --site-dir public
+```
+
+### 公開前に見ること
+
+1. TODOを置き換え、description・date・lastmod・タグを確認する。
+2. ローカルで本文、画像、コードコピー、数式、図、リンクを確認する。
+3. PC・スマートフォン幅とライト／ダークモードで確認する。
+4. 公開可能な内容か確認し、draftをfalseにする。
+5. `python3 scripts/blog.py check`を実行する。
+6. `git status --short`と`git diff`で公開対象を確認する。下書き・画像・履歴もPublicリポジトリでは閲覧可能。
+
+## GitHub Pagesへ公開する
+
+公開先は`icchi5160/slower`です。PagesのSourceは**GitHub Actions**を使用し、独自ドメインは未設定です。mainへのpushを契機にビルド・チェック・デプロイします。PRではビルドとチェックのみ実施します。
+
+この作業セッションでCodexがpush等の外部操作をする場合は、事前のユーザー承認が必要です。以下は、自分で公開する際の手順です。
+
+```bash
+# 対象ファイルを確認してから、明示的に指定してステージする例
+git add content/notes/programming/python-pathlib/
+git diff --cached
+# コードや設定変更がある場合は、それらも確認して追加する
+git commit -m "Add pathlib learning note"
 git push origin main
 ```
 
-[Actionsの実行一覧](https://github.com/icchi5160/slower/actions)でbuild・deployの成功を確認し、
-[公開サイト](https://icchi5160.github.io/slower/)で変更を確認します。
+GitHubのリポジトリ画面で**Actions → Build and deploy Hugo → 最新の実行**を開きます。build・deployが成功したら https://icchi5160.github.io/slower/ の記事とSearchへの反映を確認します。
+
+GitHub CLIがあれば次でも確認できます。
+
+```bash
+gh run list --repo icchi5160/slower --limit 5
+gh run view <run-id> --repo icchi5160/slower --log-failed
+```
+
+ワークフローは`.github/workflows/hugo.yaml`にあります。HugoアーカイブのSHA-256を検証し、ActionsはコミットSHAで固定しています。通常はcontents:read、デプロイジョブだけpages:write / id-token:writeを与えます。
+
+### デプロイエラーの確認
+
+- **Test authoring tools**: テストの失敗内容と対象関数を確認する。
+- **Build production site**: TOML・Markdown・テンプレートエラー、警告、テーマ取得を確認する。
+- **Check Markdown and internal links**: 指摘された記事や参照先を修正する。`/notes/...`の直書きより`relref`を使う。
+- **Configure Pages / Deploy to GitHub Pages**: PagesのSource、Actionsの権限、対象ブランチ、環境設定を確認する。
+- 成功しても古い場合: 最新実行のコミットと閲覧URLを確認し、ブラウザを再読み込みする。GitHub Pages側の反映待ちもある。
+
+失敗を修正したらローカルチェックを再実行してpushします。ログへ認証情報を書かず、トークンを設定ファイルへ記入しないでください。
+
+### 将来URLを変える場合
+
+独自ドメインや`icchi5160.github.io`用リポジトリへの変更は可能です。実施時に`hugo.toml`のbaseURL、GitHub Pages設定、必要ならDNS・CNAME、ワークフローのフォールバックURLをまとめて変更します。`python3 scripts/blog.py check --base-url https://example.com/`で移行先URLでのビルドも検証できます。
+
+## ファイルの役割と今後の管理
+
+| パス | 編集内容 |
+| --- | --- |
+| hugo.toml | 公開URL、サイト名、プロフィール、GitHubリンク、ナビゲーション、検索等 |
+| config/development/ | ローカルURLと旧ローカルパスのリダイレクト |
+| content/ | Markdown記事、一覧説明、About、Search、記事画像 |
+| archetypes/ | セクション別の記事テンプレート |
+| layouts/ | PaperModのテンプレート上書きと拡張 |
+| assets/css/extended/ | 文字、余白、背景、記事・コード・図の調整 |
+| assets/js/ | 記事限定のKaTeX・Mermaid初期化 |
+| assets/images/home/ | Home案内カードの生成画像原本と生成プロンプト記録 |
+| scripts/blog.py | 記事作成・品質チェック |
+| tests/test_blog_tools.py | チェックと記事作成の回帰テスト |
+| .github/workflows/hugo.yaml | ビルド・チェック・GitHub Pages公開 |
+| themes/PaperMod/ | submodule。直接変更しない |
+
+Homeの自己紹介は`params.homeInfoParams.Content`、GitHubリンクは`params.socialIcons`、About本文は`content/about.md`で変更します。現在のプロフィールは仮の記述です。
+
+3本の初期サンプルと技術機能の検証記事はサンプルとして公開対象になっています。不要なら`draft = true`にするか削除してください。架空の実験結果・実績を実際の成果として記載しない方針です。
+
+Weeknotesは未作成です。追加する場合は`content/weeknotes/_index.md`と記事テンプレートを用意し、ナビゲーション・mainSections・作成チェック用のSECTIONSを必要に応じて更新します。
+
+`public/`、`resources/_gen/`、PythonキャッシュはGit対象外です。チェック時の一時記事や生成物はリポジトリへ残しません。

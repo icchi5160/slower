@@ -18,6 +18,10 @@ timeZone = 'Asia/Tokyo'
   mainSections = ['notes', 'blog', 'research', 'projects']
   defaultTheme = 'auto'
   disableThemeToggle = false
+  ShowCodeCopyButtons = true
+  ShowToc = true
+  TocOpen = true
+  UseHugoToc = true
 
 # 仮の自己紹介。確定したプロフィールに合わせて変更する。
 [params.homeInfoParams]
@@ -68,3 +72,38 @@ timeZone = 'Asia/Tokyo'
   name = 'About'
   pageRef = '/about'
   weight = 60
+
+
+[outputs]
+  home = ['HTML', 'RSS', 'JSON']
+
+[params.fuseOpts]
+  isCaseSensitive = false
+  shouldSort = true
+  ignoreLocation = true
+  threshold = 0.2
+  minMatchCharLength = 1
+  keys = ['title', 'summary', 'content']
+
+[markup.highlight]
+  noClasses = false
+  lineNos = false
+  guessSyntax = false
+
+[markup.tableOfContents]
+  startLevel = 2
+  endLevel = 3
+  ordered = false
+
+[markup.goldmark.extensions.passthrough]
+  enable = true
+
+[markup.goldmark.extensions.passthrough.delimiters]
+  block = [['\[', '\]'], ['$$', '$$']]
+  inline = [['\(', '\)'], ['$', '$']]
+
+[[menus.main]]
+  identifier = 'search'
+  name = 'Search'
+  pageRef = '/search'
+  weight = 70

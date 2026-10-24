@@ -1,0 +1,64 @@
+/* VS Code標準の等幅フォントを、閲覧端末にあるものから使用する。 */
+.md-content pre,
+.md-content code {
+    font-family: 'Droid Sans Mono', Consolas, Menlo, Monaco, monospace;
+    font-variant-ligatures: none;
+}
+
+/* コードも本文と同じ文字サイズに揃える。 */
+.md-content code {
+    font-size: 1em;
+}
+
+/* 長いコード・数式・図は、そのブロック内だけをスクロールさせる。 */
+.md-content pre {
+    max-height: 32rem;
+    overflow: auto;
+}
+
+.md-content pre code {
+    display: block;
+    min-width: max-content;
+    overflow: visible;
+    white-space: pre;
+    word-break: normal;
+}
+
+.copy-code {
+    display: block;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.katex {
+    font-size: 1.05em;
+}
+
+.katex-display {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-block: 0.25rem;
+}
+
+.md-content pre.mermaid {
+    padding: 16px;
+    background: var(--entry);
+    color: var(--content);
+    border: 1px solid var(--border);
+    white-space: pre;
+}
+
+.mermaid svg {
+    display: block;
+    min-width: 440px;
+    margin-inline: auto;
+}
+
+.toc {
+    font-size: 0.875rem;
+}
+
+.md-content :is(h1, h2, h3, h4, h5, h6) {
+    scroll-margin-top: 20px;
+}

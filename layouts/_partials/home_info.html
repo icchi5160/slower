@@ -9,16 +9,20 @@
         {{ $opts := dict "display" "block" }}
         {{ .Content | $.Page.RenderString $opts }}
     </div>
-    <footer class="entry-footer">
+    <footer class="entry-footer profile-links">
         {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
+        <span>{{ site.Params.author }}</span>
     </footer>
     <hr class="section-divider">
     <nav class="home-links" aria-label="コンテンツの案内">
         {{- range slice "/notes" "/research" "/projects" }}
         {{- with site.GetPage . }}
         <a class="home-link" href="{{ .RelPermalink }}">
-            <strong>{{ .Title }}</strong>
-            <span>{{ .Description }}</span>
+            <div class="home-link-copy">
+                <strong>{{ .Title }}</strong>
+                <span>{{ .Description }}</span>
+            </div>
+            {{ partial "home_card_art.html" . }}
         </a>
         {{- end }}
         {{- end }}

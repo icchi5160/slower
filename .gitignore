@@ -9,3 +9,7 @@
 Thumbs.db
 *.swp
 *.swo
+
+# Pythonのチェックツールが生成するキャッシュ
+__pycache__/
+*.py[cod]

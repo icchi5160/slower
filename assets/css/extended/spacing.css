@@ -132,9 +132,10 @@ body.list .home-info {
 }
 
 .home-link {
-    display: flex;
-    flex-direction: column;
-    gap: 7.2px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 112px;
+    align-items: center;
+    gap: 16px;
     padding: 16px;
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -168,6 +169,7 @@ body.list .home-info {
     .home-link:last-child {
         grid-column: 1 / -1;
     }
+
 }
 
 @media screen and (min-width: 1100px) {
@@ -197,4 +199,21 @@ body.list .home-info {
 
 .home-info > .section-divider:last-child {
     margin-bottom: 0;
+}
+
+/* 一覧・Search冒頭では、見出しと説明ブロックの余白を重ねない。 */
+body.list .main > .page-header {
+    margin-bottom: 0;
+}
+
+body.list .main > .page-header + .post-content {
+    margin-block: 0;
+}
+
+body.list .main > .page-header + .post-content > hr:first-child {
+    margin-top: 0;
+}
+
+body.list .main > .page-header + .section-divider {
+    margin-block: 0;
 }

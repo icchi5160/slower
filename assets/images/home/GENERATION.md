@@ -1,0 +1,16 @@
+# Homeカード用の生成画像
+
+生成方法: built-in image_gen。背景透過の新規画像として3点を生成し、このディレクトリへコピーしました。
+サイトではHugoの画像処理で小さいWebPを生成して配信します。元のアルファチャンネルは保持しています。
+
+## notes.png
+
+Use case: illustration-story. Asset type: small raster illustration for the right side of a quiet Japanese personal technical blog navigation card. Create one cohesive still-life vignette, square composition. Natural, softly painted editorial illustration with realistic material texture, soft daylight, warm neutral tones and a subtle muted sage accent. Organic painterly shading and tactile details, not line art, not a flat vector icon, not a logo. The subject must remain recognizable at a small website-card size. Center the subject with breathing room, entirely within the frame. Genuine transparent background, soft feathered edges and very subtle contact shadow only. No text, letters, numbers, logos, watermarks, people, animals, frame, or background scene. Subject: an open cream-paper notebook with a few soft abstract graphite marks, a natural wooden pencil resting beside it, and one small sage-green leaf. Calm, inviting study atmosphere. The notebook is the main subject.
+
+## research.png
+
+Use case: illustration-story. Asset type: small raster illustration for the right side of a quiet Japanese personal technical blog navigation card. Create one cohesive still-life vignette, square composition. Natural, softly painted editorial illustration with realistic material texture, soft daylight, warm neutral tones and a subtle muted sage accent. Organic painterly shading and tactile details, not line art, not a flat vector icon, not a logo. The subject must remain recognizable at a small website-card size. Center the subject with breathing room, entirely within the frame. Genuine transparent background, soft feathered edges and very subtle contact shadow only. No text, letters, numbers, logos, watermarks, people, animals, frame, or background scene. Subject: a small clear glass prism and a gently tilted magnifying glass resting over a cream paper sheet with a few abstract soft data marks, accompanied by one small sage-green leaf. Quiet analytical curiosity. The glass instruments and paper form one simple compact still life.
+
+## projects.png
+
+Use case: illustration-story. Asset type: small raster illustration for the right side of a quiet Japanese personal technical blog navigation card. Create one cohesive still-life vignette, square composition. Natural, softly painted editorial illustration with realistic material texture, soft daylight, warm neutral tones and a subtle muted sage accent. Organic painterly shading and tactile details, not line art, not a flat vector icon, not a logo. The subject must remain recognizable at a small website-card size. Center the subject with breathing room, entirely within the frame. Genuine transparent background, soft feathered edges and very subtle contact shadow only. No text, letters, numbers, logos, watermarks, people, animals, frame, or background scene. Subject: a small slim open silver laptop with a softly glowing muted sage screen showing only a few indistinct abstract blocks, beside two small natural wooden building blocks. Calm personal software-making atmosphere. The laptop is the main subject, without any branding or readable characters.

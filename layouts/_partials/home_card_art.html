@@ -1,0 +1,12 @@
+{{- $image := resources.Get (printf "images/home/%s.png" .Section) -}}
+{{- with $image -}}
+{{- $small := .Resize "160x webp q85" -}}
+{{- $large := .Resize "320x webp q85" -}}
+<img class="home-link-art" src="{{ $small.RelPermalink }}"
+     srcset="{{ $small.RelPermalink }} 160w, {{ $large.RelPermalink }} 320w"
+     sizes="(max-width: 768px) 88px, 112px"
+     width="{{ $large.Width }}" height="{{ $large.Height }}"
+     alt="" aria-hidden="true" loading="lazy" decoding="async">
+{{- else -}}
+{{- errorf "Home card illustration is missing for section %s" .Section -}}
+{{- end -}}

@@ -1,0 +1,95 @@
+/* 既存の文字サイズ・余白を基準に、Homeと一覧の見通しを整える。 */
+.profile-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.latest-header h2 {
+    font-size: 1.125rem;
+    line-height: 1.5;
+}
+
+.entry-tags {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    list-style: none;
+    margin-top: 9.6px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+.entry-tags a {
+    display: block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--code-bg);
+    color: var(--secondary);
+}
+
+.entry-tags a:hover {
+    color: var(--primary);
+}
+
+.more-tags {
+    color: var(--secondary);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 4px;
+}
+
+@media (hover: none) {
+    .md-content :is(h1, h2, h3, h4, h5, h6) .anchor {
+        display: inline-flex;
+        margin-inline-start: 0.5em;
+        color: var(--secondary);
+        font-size: 0.75em;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-entry {
+        transition: none;
+    }
+    .post-entry:hover,
+    .post-entry:focus-within {
+        transform: none;
+    }
+}
+
+/* 案内カードの説明は左、生成イラストは右に配置する。 */
+.home-link-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 7.2px;
+    min-width: 0;
+}
+
+.home-link-art {
+    display: block;
+    width: 112px;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: contain;
+    justify-self: end;
+}
+
+@media screen and (max-width: 768px) {
+    .home-link {
+        grid-template-columns: minmax(0, 1fr) 88px;
+        column-gap: 12px;
+    }
+
+    .home-link-art {
+        width: 88px;
+    }
+}

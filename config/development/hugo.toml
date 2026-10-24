@@ -1,0 +1,2 @@
+# ローカルではルートで表示し、本番の/slower/パスと分離する。
+baseURL = 'http://localhost:1313/'
