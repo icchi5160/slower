@@ -1,7 +1,7 @@
 /* ブロック間の余白とPCの本文幅を調整する。 */
 :root {
     --content-gap: 19.2px;
-    --header-height: 44px;
+    --header-height: 66px;
     --nav-width: var(--main-width);
 }
 
@@ -72,7 +72,7 @@
 @media screen and (min-width: 769px) {
     :root {
         --main-width: 1024px;
-        --header-height: 64px;
+        --header-height: 96px;
     }
 
     .header-nav {
