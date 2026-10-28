@@ -1,4 +1,5 @@
 +++
+aliases = ['/blog/first-tech-note/']
 title = "初めての技術記事"
 date = '2026-10-24T16:09:35+09:00'
 lastmod = '2026-10-24T16:09:35+09:00'
@@ -25,7 +26,7 @@ summary = 'いろいろ記入してみて表示を確認する用のノート'
 
 ### ローカルで記事下書き作成，編集，チェック
 ```python
-python3 scripts/blog.py new notes python-pathlib --topic programming --title "pathlibの使い方" --summary "ファイルパス操作で学んだこと。" --tag Python
+python3 scripts/blog.py new articles python-pathlib --topic programming --title "pathlibの使い方" --summary "ファイルパス操作で学んだこと。" --tag Python
 
 (draftのパスが表示されるのでctrl+clickで開いて，内容を書く)
 (draftタグをfalseにする)
@@ -38,7 +39,7 @@ hugo -D server # localで表示を確認
 ### git pushで投稿
 ```bash
 # 対象ファイルを確認してから、明示的に指定してステージする例
-git add content/notes/programming/python-pathlib/
+git add content/articles/python-pathlib/
 git diff --cached # 変更の確認
 # コードや設定変更がある場合は、それらも確認して追加する
 git commit -m "Add pathlib learning note"

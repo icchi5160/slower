@@ -20,7 +20,7 @@ except ModuleNotFoundError:
     raise SystemExit("Python 3.11以上が必要です。")
 
 ROOT = Path(__file__).resolve().parents[1]
-SECTIONS = ("notes", "blog", "research", "projects")
+SECTIONS = ("articles", "research", "projects")
 TOPICS = {
     "deep-learning": "AI / Deep Learning",
     "computer-vision": "Computer Vision",
@@ -220,11 +220,9 @@ def link_errors(site: Path, base_url: str) -> tuple[list[str], int]:
 def new_post(root: Path, args) -> Path:
     if not SLUG.fullmatch(args.slug):
         raise ValueError("slugは英小文字・数字・ハイフンを使ってください（例: my-first-note）")
-    if args.section == "notes" and not args.topic:
-        raise ValueError("Notesには--topicが必要です")
-    if args.section != "notes" and args.topic:
-        raise ValueError("--topicはNotesでのみ使用できます")
-    parts = [args.section] + ([args.topic] if args.topic else []) + [args.slug]
+    if args.section != "articles" and args.topic:
+        raise ValueError("--topicはArticlesでのみ使用できます")
+    parts = [args.section, args.slug]
     folder = root / "content" / Path(*parts)
     if not folder.resolve().is_relative_to((root / "content").resolve()):
         raise ValueError("記事の作成先がcontentの外です")

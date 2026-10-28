@@ -11,11 +11,11 @@
 1. 下書きを作成する。
 
    ```bash
-   python3 scripts/blog.py new blog my-new-post --title "記事のタイトル"
+   python3 scripts/blog.py new articles my-new-post --title "記事のタイトル"
    ```
 
-2. `content/blog/my-new-post/index.md`をVS Codeなどで開き、タイトル・description・本文を編集する。テンプレートの`TODO:`は書き換えるか削除する。
-3. ローカルサーバーを起動し、http://localhost:1313/blog/my-new-post/ を確認する。
+2. `content/articles/my-new-post/index.md`をVS Codeなどで開き、タイトル・description・本文を編集する。テンプレートの`TODO:`は書き換えるか削除する。
+3. ローカルサーバーを起動し、http://localhost:1313/articles/my-new-post/ を確認する。
 
    ```bash
    hugo server -D --disableFastRender
@@ -33,9 +33,9 @@
    ```bash
    git status --short
    git diff
-   git add content/blog/my-new-post/
+   git add content/articles/my-new-post/
    git diff --cached
-   git commit -m "Add new blog post"
+   git commit -m "Add new articles post"
    git push origin main
    ```
 
@@ -78,19 +78,21 @@ http://localhost:1313/ を開きます。終了は`Ctrl+C`。`-D`は下書きも
 
 ## 新しい記事を作る
 
+NotesとBlogはArticlesへ統合しています。記事は`content/articles/`へまとめ、分野はタグ・カテゴリで整理します。旧`/notes/`・`/blog/`はArticlesへ、移動した記事の旧URLは新しい記事へ転送します（下書きの転送は`-D`時のみ）。
+
 記事は原則Leaf Bundle（記事ごとのフォルダと`index.md`）で管理します。
 slugは英小文字・数字をハイフンで区切ります。公開後のslug変更はURL変更になるため避けます。
 
 ```bash
-python3 scripts/blog.py new notes python-pathlib --topic programming --title "pathlibの使い方" --summary "ファイルパス操作で学んだこと。" --tag Python
-python3 scripts/blog.py new blog my-first-post --title "初めての記事"
+python3 scripts/blog.py new articles python-pathlib --topic programming --title "pathlibの使い方" --summary "ファイルパス操作で学んだこと。" --tag Python
+python3 scripts/blog.py new articles my-first-post --title "初めての記事"
 python3 scripts/blog.py new research model-comparison --title "モデルの比較記録"
 python3 scripts/blog.py new projects my-cli --title "CLIツールの開発記録" --tag Rust
 ```
 
 `--tag`は繰り返し指定できます。`--summary`はdescriptionとsummaryの両方へ設定します。同じURLの記事がある場合は上書きしません。
 
-Notesでは`--topic`が必須です。次の6分野から選びます。カテゴリも自動設定します。
+Articlesでは`--topic`を任意で指定できます。指定すると、次の6分野からカテゴリを自動設定します。記事は分野にかかわらず`content/articles/<slug>/index.md`へ作成します。
 
 | topic | 分野 |
 | --- | --- |
@@ -101,13 +103,13 @@ Notesでは`--topic`が必須です。次の6分野から選びます。カテ�
 | security | Security |
 | infrastructure | Infrastructure |
 
-Pythonコマンドは内部でHugo標準の`hugo new content`を呼び出し、タイトル・概要・タグやNotesのカテゴリを設定します。Hugoコマンドを直接使う場合は、作成後にこれらを手動で編集します。生成される記事はどちらも同じMarkdown形式で、両方のコマンドを実行する必要はありません。
+Pythonコマンドは内部でHugo標準の`hugo new content`を呼び出し、タイトル・概要・タグやArticlesのカテゴリを設定します。Hugoコマンドを直接使う場合は、作成後にこれらを手動で編集します。生成される記事はどちらも同じMarkdown形式で、両方のコマンドを実行する必要はありません。
 
 ```bash
-hugo new content notes/programming/python-pathlib/index.md
+hugo new content articles/python-pathlib/index.md
 ```
 
-作成された`content/notes/programming/python-pathlib/index.md`を開いて編集します。VS Codeのターミナルでは、表示されたパスをCtrl+クリック（macOSではCmd+クリック）して開けます。
+作成された`content/articles/python-pathlib/index.md`を開いて編集します。VS Codeのターミナルでは、表示されたパスをCtrl+クリック（macOSではCmd+クリック）して開けます。
 
 ### メタデータと本文
 
@@ -141,7 +143,7 @@ summary = ''
 既存の`index.md`を編集し、実質的な内容変更ではlastmodを更新します。画像は記事フォルダに同梱し、英小文字とハイフンで命名します。
 
 ```text
-content/notes/programming/python-pathlib/
+content/articles/python-pathlib/
 ├── index.md
 └── path-example.webp
 ```
@@ -155,7 +157,7 @@ content/notes/programming/python-pathlib/
 別の記事へのリンクはHugoの`relref`を使うと、GitHub Pagesの`/slower/`を含むURLにも対応できます。
 
 ```markdown
-[Transformerの基礎]({{< relref "/notes/deep-learning/transformer-basics" >}})
+[Transformerの基礎]({{< relref "/articles/transformer-basics" >}})
 ```
 
 ## コード・数式・図・目次・検索
@@ -202,7 +204,7 @@ flowchart LR
 
 SearchはPaperMod同梱のFuse.jsを使用し、タイトル・要約・本文を検索します。日本語の部分文字列と英語の技術用語に対応します。日本語の形態素解析は行いません。検索対象から外すページは`searchHidden = true`を指定します。公開ビルドの検索インデックスには下書きを含めません。
 
-全機能の表示例: http://localhost:1313/blog/technical-writing-check/
+全機能の表示例: http://localhost:1313/articles/technical-writing-check/
 
 ## 公開前の品質チェック
 
@@ -254,7 +256,7 @@ python3 scripts/blog.py check --site-dir public
 
 ```bash
 # 対象ファイルを確認してから、明示的に指定してステージする例
-git add content/notes/programming/python-pathlib/
+git add content/articles/python-pathlib/
 git diff --cached
 # コードや設定変更がある場合は、それらも確認して追加する
 git commit -m "Add pathlib learning note"
@@ -276,9 +278,9 @@ gh run view <run-id> --repo icchi5160/slower --log-failed
 
 - **Test authoring tools**: テストの失敗内容と対象関数を確認する。
 - **Build production site**: TOML・Markdown・テンプレートエラー、警告、テーマ取得を確認する。
-- **Check Markdown and internal links**: 指摘された記事や参照先を修正する。`/notes/...`の直書きより`relref`を使う。
+- **Check Markdown and internal links**: 指摘された記事や参照先を修正する。`/articles/...`の直書きより`relref`を使う。
 - **Configure Pages / Deploy to GitHub Pages**: PagesのSource、Actionsの権限、対象ブランチ、環境設定を確認する。
-- **デプロイ成功なのに記事がない**: 記事が`draft = false`か、dateが未来になっていないかを確認する。`git show HEAD:content/blog/my-new-post/index.md`でコミット内の内容も確認する（パスは実際の記事へ置き換える）。
+- **デプロイ成功なのに記事がない**: 記事が`draft = false`か、dateが未来になっていないかを確認する。`git show HEAD:content/articles/my-new-post/index.md`でコミット内の内容も確認する（パスは実際の記事へ置き換える）。
 - **ローカルだけ新しい**: `git status --short`で未コミット変更を確認する。記事だけをgit addした場合、設定やCSSの変更は含まれない。最新実行のコミットと、反映したい変更が含まれるコミットを比較する。
 - **表示が古い**: 閲覧先がhttps://icchi5160.github.io/slower/ かを確認し、ブラウザを再読み込みする。GitHub Pages側の反映待ちもある。
 
@@ -305,7 +307,7 @@ gh run view <run-id> --repo icchi5160/slower --log-failed
 | .github/workflows/hugo.yaml | ビルド・チェック・GitHub Pages公開 |
 | themes/PaperMod/ | submodule。直接変更しない |
 
-Homeの自己紹介は`params.homeInfoParams.Content`、GitHubリンクは`params.socialIcons`、About本文は`content/about.md`で変更します。現在のプロフィールは仮の記述です。
+Homeの自己紹介は`params.homeInfoParams.Content`、GitHubリンクは`params.socialIcons`、About本文は`content/about.md`で変更します。プロフィールと興味のある分野はAboutで管理します。
 
 「初めての技術記事」と3本の初期サンプルは`draft = true`にして、公開サイトには表示しない設定です。動作確認用の「技術記事の表示テスト」は公開対象です。ローカルの`hugo server -D`では引き続き確認できます。再公開する場合は`draft = false`へ変更してください。架空の実験結果・実績を実際の成果として記載しない方針です。
 

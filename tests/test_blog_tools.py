@@ -2,6 +2,8 @@
 import importlib.util
 from pathlib import Path
 import shutil
+import json
+import subprocess
 from types import SimpleNamespace
 import tempfile
 import unittest
@@ -28,7 +30,7 @@ class MarkdownTests(unittest.TestCase):
     def test_frontmatter_and_publication_requirements(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            article = root / 'content/blog/test/index.md'
+            article = root / 'content/articles/test/index.md'
             article.parent.mkdir(parents=True)
             valid = '+++\ntitle = "記事"\ndate = "2026-10-24T09:00:00+09:00"\ndescription = "概要"\ndraft = false\n+++\n本文。\n'
             article.write_text(valid, encoding='utf-8')
@@ -38,7 +40,7 @@ class MarkdownTests(unittest.TestCase):
                      (valid.replace('+++\n本文', 'tags = "Python"\n+++\n本文'), '配列'),
                      (valid.replace('+++\n本文', 'lastmod = "2020-01-01"\n+++\n本文'), 'lastmod'),
                      (valid.replace('date = "2026-10-24T09:00:00+09:00"', 'date = "bad"'), '日付形式'),
-                     ('本文だけ', 'front matter'), ('+++\ntitle = [\n+++\n本文', 'content/blog/test/index.md')]
+                     ('本文だけ', 'front matter'), ('+++\ntitle = [\n+++\n本文', 'content/articles/test/index.md')]
             for text, message in cases:
                 with self.subTest(message=message):
                     article.write_text(text, encoding='utf-8')
@@ -79,8 +81,8 @@ class NewPostTests(unittest.TestCase):
             (root / 'hugo.toml').write_text('baseURL = "https://example.test/"\ntitle = "Test"\n', encoding='utf-8')
             shutil.copytree(ROOT / 'archetypes', root / 'archetypes')
             (root / 'content').mkdir()
-            for section in blog.SECTIONS:
-                args = SimpleNamespace(section=section, slug='first-post', topic='programming' if section == 'notes' else None,
+            for section, topic in [("articles", None), ("articles", "programming"), ("research", None), ("projects", None)]:
+                args = SimpleNamespace(section=section, slug="first-post" + ("-topic" if topic else ""), topic=topic,
                                        title='日本語の「記事」', summary='概要と "引用"', tag=['Python', '学習'])
                 path = blog.new_post(root, args)
                 meta, body, _ = blog.read_post(path)
@@ -90,8 +92,9 @@ class NewPostTests(unittest.TestCase):
                 self.assertTrue(meta['draft'])
                 self.assertFalse(meta['math'])
                 self.assertIn('TODO:', body)
-                if section == 'notes':
+                if topic:
                     self.assertEqual(meta['categories'], ['Programming'])
+                self.assertEqual(path, root / 'content' / section / args.slug / 'index.md')
                 original = path.read_bytes()
                 with self.assertRaises(ValueError):
                     blog.new_post(root, args)
@@ -102,11 +105,51 @@ class NewPostTests(unittest.TestCase):
             self.assertTrue(any('TODO' in error for error in blog.markdown_errors(root, {})))
 
     def test_unsafe_names_and_invalid_topic_combination(self):
-        for section, slug, topic in [('blog', '../escape', None), ('blog', 'UpperCase', None),
-                                      ('notes', 'valid', None), ('blog', 'valid', 'programming')]:
+        for section, slug, topic in [('articles', '../escape', None), ('articles', 'UpperCase', None),
+                                      ('research', 'valid', 'programming'), ('projects', 'valid', 'programming')]:
             with self.subTest(slug=slug, section=section):
                 with self.assertRaises(ValueError):
                     blog.new_post(ROOT, SimpleNamespace(section=section, slug=slug, topic=topic))
+
+
+@unittest.skipUnless(shutil.which('hugo'), 'Hugoが必要です')
+class ArticlesMigrationTests(unittest.TestCase):
+    def test_navigation_aliases_and_draft_visibility(self):
+        with tempfile.TemporaryDirectory() as directory:
+            for prefix in ('/', '/slower/'):
+                for drafts in (False, True):
+                    with self.subTest(prefix=prefix, drafts=drafts):
+                        base = 'https://example.test' + prefix
+                        site = Path(directory) / ('subpath' if prefix != '/' else 'root') / str(drafts)
+                        command = ['hugo', '--quiet', '--panicOnWarning', '--printPathWarnings',
+                                   '--baseURL', base, '--destination', str(site)]
+                        if drafts:
+                            command.append('-D')
+                        subprocess.run(command, cwd=ROOT, check=True)
+                        home = blog.Document((site / 'index.html').read_text())
+                        links = {href for href, _ in home.links}
+                        self.assertIn(prefix + 'articles/', links)
+                        self.assertNotIn(prefix + 'notes/', links)
+                        self.assertNotIn(prefix + 'blog/', links)
+                        self.assertIn('Articles', (site / 'articles/index.html').read_text())
+                        aliases = {'notes': 'articles', 'blog': 'articles',
+                                   'blog/technical-writing-check': 'articles/technical-writing-check'}
+                        if drafts:
+                            aliases.update({'blog/first-tech-note': 'articles/first-tech-note',
+                                            'notes/deep-learning/transformer-basics': 'articles/transformer-basics'})
+                        for old, new in aliases.items():
+                            alias = (site / old / 'index.html').read_text()
+                            self.assertIn('http-equiv="refresh"', alias)
+                            self.assertIn(base + new + '/', alias)
+                        index = json.loads((site / 'index.json').read_text())
+                        urls = {page['permalink'] for page in index}
+                        self.assertIn(base + 'articles/technical-writing-check/', urls)
+                        for route in ['articles/first-tech-note', 'articles/transformer-basics',
+                                      'research/image-classification-experiment', 'projects/cli-tool-development']:
+                            self.assertEqual((site / route / 'index.html').exists(), drafts)
+                            self.assertEqual(base + route + '/' in urls, drafts)
+                        errors, _ = blog.link_errors(site, base)
+                        self.assertEqual(errors, [])
 
 
 if __name__ == '__main__':

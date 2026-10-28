@@ -15,7 +15,7 @@ timeZone = 'Asia/Tokyo'
   description = '学習・研究・個人開発の記録'
   author = 'icchi5160'
   DateFormat = '2006年1月2日'
-  mainSections = ['notes', 'blog', 'research', 'projects']
+  mainSections = ['articles', 'research', 'projects']
   defaultTheme = 'auto'
   disableThemeToggle = false
   ShowCodeCopyButtons = true
@@ -23,9 +23,9 @@ timeZone = 'Asia/Tokyo'
   TocOpen = true
   UseHugoToc = true
 
-# 仮の自己紹介。確定したプロフィールに合わせて変更する。
+# Home冒頭の紹介文。
 [params.homeInfoParams]
-  Content = '学習・研究・個人開発の記録を、少しずつ。AI・Computer Vision・プログラミングについて書いていきます。（自己紹介は仮の内容です）'
+  Content = 'icchi5160の学習・研究・個人開発の記録ブログ'
 
 # GitHubリンクの設定箇所。Aboutにも同じ設定を使用する。
 [[params.socialIcons]]
@@ -44,16 +44,10 @@ timeZone = 'Asia/Tokyo'
   weight = 10
 
 [[menus.main]]
-  identifier = 'notes'
-  name = 'Notes'
-  pageRef = '/notes'
+  identifier = 'articles'
+  name = 'Articles'
+  pageRef = '/articles'
   weight = 20
-
-[[menus.main]]
-  identifier = 'blog'
-  name = 'Blog'
-  pageRef = '/blog'
-  weight = 30
 
 [[menus.main]]
   identifier = 'research'

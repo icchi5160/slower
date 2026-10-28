@@ -15,7 +15,7 @@
     </footer>
     <hr class="section-divider">
     <nav class="home-links" aria-label="コンテンツの案内">
-        {{- range slice "/notes" "/research" "/projects" }}
+        {{- range slice "/articles" "/research" "/projects" }}
         {{- with site.GetPage . }}
         <a class="home-link" href="{{ .RelPermalink }}">
             <div class="home-link-copy">

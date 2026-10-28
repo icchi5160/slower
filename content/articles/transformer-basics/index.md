@@ -1,4 +1,5 @@
 +++
+aliases = ['/notes/deep-learning/transformer-basics/']
 title = '【サンプル】Transformerの基礎'
 date = '2026-10-24T09:00:00+09:00'
 lastmod = '2026-10-24T13:22:36+09:00'

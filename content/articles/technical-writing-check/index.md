@@ -1,4 +1,5 @@
 +++
+aliases = ['/blog/technical-writing-check/']
 title = '【動作確認用】技術記事の表示テスト'
 date = '2026-10-24T13:28:32+09:00'
 lastmod = '2026-10-24T13:28:32+09:00'
@@ -51,7 +52,7 @@ fn main() {
 ### Bash
 
 ```bash
-for file in content/blog/*/index.md; do
+for file in content/articles/*/index.md; do
     printf '%s\n' "$file"
 done
 ```
