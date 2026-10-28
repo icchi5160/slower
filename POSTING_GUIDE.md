@@ -307,7 +307,7 @@ gh run view <run-id> --repo icchi5160/slower --log-failed
 
 Homeの自己紹介は`params.homeInfoParams.Content`、GitHubリンクは`params.socialIcons`、About本文は`content/about.md`で変更します。現在のプロフィールは仮の記述です。
 
-3本の初期サンプルと技術機能の検証記事、ユーザーが作成した記事を掲載しています。サンプル記事は表示確認用です。不要なら`draft = true`にするか削除してください。架空の実験結果・実績を実際の成果として記載しない方針です。
+「初めての技術記事」と3本の初期サンプルは`draft = true`にして、公開サイトには表示しない設定です。動作確認用の「技術記事の表示テスト」は公開対象です。ローカルの`hugo server -D`では引き続き確認できます。再公開する場合は`draft = false`へ変更してください。架空の実験結果・実績を実際の成果として記載しない方針です。
 
 Weeknotesは未作成です。追加する場合は`content/weeknotes/_index.md`と記事テンプレートを用意し、ナビゲーション・mainSections・作成チェック用のSECTIONSを必要に応じて更新します。
 

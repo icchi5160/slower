@@ -2,7 +2,7 @@
 title = "初めての技術記事"
 date = '2026-10-24T16:09:35+09:00'
 lastmod = '2026-10-24T16:09:35+09:00'
-draft = false
+draft = true
 # 数式を使う記事ではtrueに変更する。
 math = false
 # カードにつくタグ

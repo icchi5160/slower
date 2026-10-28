@@ -2,7 +2,7 @@
 title = '【サンプル】画像分類の実験記録'
 date = '2026-10-24T09:00:00+09:00'
 lastmod = '2026-10-24T09:00:00+09:00'
-draft = false
+draft = true
 tags = ["Computer Vision", "画像分類", "サンプル"]
 categories = ["Computer Vision"]
 description = '画像分類の実験設定・結果を記録する書式例です。実験は未実施で、実測値はありません。'

@@ -2,7 +2,7 @@
 title = '【サンプル】CLIツールの開発記録'
 date = '2026-10-24T09:00:00+09:00'
 lastmod = '2026-10-24T09:00:00+09:00'
-draft = false
+draft = true
 tags = ["CLI", "Programming", "サンプル"]
 categories = ["Programming"]
 description = 'CLIツールを紹介する記事の書式例です。ツールは構想例で、実装・公開実績はありません。'
